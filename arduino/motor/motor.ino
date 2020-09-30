@@ -115,10 +115,10 @@ PWR+             VIN
 
 
 
-//#define VNH2SP30 // defined if this board is used
+#define VNH2SP30 // defined if this board is used
 //#define DISABLE_TEMP_SENSE    // if no temp sensors avoid errors
 //#define DISABLE_VOLTAGE_SENSE // if no voltage sense
-//#define DISABLE_RUDDER_SENSE  // if no rudder sense
+#define DISABLE_RUDDER_SENSE  // if no rudder sense
 
 
 // run at 4mhz instead of 16mhz to save power,
@@ -405,10 +405,14 @@ void setup()
 #if 1
     // setup adc
     DIDR0 = 0x3f; // disable all digital io on analog pins
+#ifndef VNH2SP30
     if(pwm_style == 2 || ratiometric_mode)
         adcref = _BV(REFS0); // 5v
     else
         adcref = _BV(REFS0)| _BV(REFS1); // 1.1v
+#else
+    adcref = _BV(REFS0)| _BV(REFS1); // 1.1v
+#endif
     ADMUX = adcref | _BV(MUX0);
     ADCSRA = _BV(ADEN) | _BV(ADIE); // enable adc with interrupts
 #if DIV_CLOCK==4
